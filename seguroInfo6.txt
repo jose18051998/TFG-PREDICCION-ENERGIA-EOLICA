@@ -1,0 +1,1036 @@
+% arara: clean: {files: [tfgtfmthesisuam.aux, tfgtfmthesisuam.idx, tfgtfmthesisuam.ilg, tfgtfmthesisuam.ind, tfgtfmthesisuam.bbl, tfgtfmthesisuam.bcf, tfgtfmthesisuam.blg, tfgtfmthesisuam.run.xml, tfgtfmthesisuam.fdb_latexmk, tfgtfmthesisuam.fls, tfgtfmthesisuam.loe, tfgtfmthesisuam.lof, tfgtfmthesisuam.lol, tfgtfmthesisuam.lot, tfgtfmthesisuam.ltb, tfgtfmthesisuam.out, tfgtfmthesisuam.toc, tfgtfmthesisuam.upa, tfgtfmthesisuam.upb, tfgtfmthesisuam.acn, tfgtfmthesisuam.acr, tfgtfmthesisuam.alg, tfgtfmthesisuam.glg, tfgtfmthesisuam.glo, tfgtfmthesisuam.gls, tfgtfmthesisuam.glsdefs, tfgtfmthesisuam.idx,  tfgtfmthesisuam.ilg, tfgtfmthesisuam.xdy, tfgtfmthesisuam.loa, tfgtfmthesisuam.gnuploterrors , tfgtfmthesisuam.mw, tfgtfmthesisuam.fdb_latexmk ]}
+% arara: pdflatex: {shell: yes}
+% arara: makeglossaries
+% arara: makeindex: {style: tfgtfmthesisuam.ist }
+% !arara: bibtex
+% arara: pdflatex: {shell: yes}
+% arara: pdflatex: {shell: yes}
+% arara: clean: {files: [tfgtfmthesisuam.aux, tfgtfmthesisuam.idx, tfgtfmthesisuam.ilg, tfgtfmthesisuam.ind, tfgtfmthesisuam.bbl, tfgtfmthesisuam.bcf, tfgtfmthesisuam.blg, tfgtfmthesisuam.run.xml, tfgtfmthesisuam.fdb_latexmk, tfgtfmthesisuam.fls, tfgtfmthesisuam.loe, tfgtfmthesisuam.lof, tfgtfmthesisuam.lol, tfgtfmthesisuam.lot, tfgtfmthesisuam.ltb, tfgtfmthesisuam.out, tfgtfmthesisuam.toc, tfgtfmthesisuam.upa, tfgtfmthesisuam.upb, tfgtfmthesisuam.acn, tfgtfmthesisuam.acr, tfgtfmthesisuam.alg, tfgtfmthesisuam.glg, tfgtfmthesisuam.glo, tfgtfmthesisuam.gls, tfgtfmthesisuam.glsdefs, tfgtfmthesisuam.idx,  tfgtfmthesisuam.ilg, tfgtfmthesisuam.xdy, tfgtfmthesisuam.loa, tfgtfmthesisuam.gnuploterrors , tfgtfmthesisuam.mw, tfgtfmthesisuam.fdb_latexmk ]}
+
+
+\documentclass[epsbased,copyright,final,printable,covers,extendedindex,firstnumbered,tfg,gnuplot]{tfgtfmthesisuam}
+
+\advisor{Ángela Fernández Pascual}
+\levelin{Ingeniería Informática}
+\title{Predicción de energía eólica con métodos de ensemble}
+\author{José Benjumeda Rubio}
+\privateaddress{C\textbackslash\ Francisco Tomás y Valiente Nº 11}
+\copyrightdate{3 de Noviembre de 2017}
+
+\dedication{A mi familia y a mis amigos, por ser un impulso constante en cualquier cosa que hago.}
+\famouscite{“Investigación es lo que hago cuando no sé lo que estoy haciendo” \\\begin{flushright}Wernher von Braun\end{flushright}}
+\prefacefile{inicio/prefacio}
+\ackfile{inicio/agradecimientos}
+\resumenfile{inicio/resumen}
+\abstractfile{inicio/abstract}
+
+\keywords{Algunas}
+\palabrasclave{Otras}
+
+\coverdata
+{
+  Escuela Politécnica Superior \\
+  Universidad Autónoma de Madrid \\
+  C\textbackslash Francisco Tomás y Valiente nº 11
+}
+
+\bibliographyconfig{tfgtfmthesisuam}
+
+\datadir{data}
+\graphicsdir{img}
+\logosdir{img}
+\codesdir{codes}
+\usepackage{amsfonts, amssymb, amsmath, amsthm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+
+\begin{document}
+
+
+
+\chapter{Introducción}\label{chap1}
+\setcounter{page}{1}
+
+\section{Motivación}
+
+\paragraph{} El uso de la energía eólica está en auge desde hace años, y España es uno de los países pioneros en fomentar su desarrollo. Está claro que la inversión en esta fuente de energía es una apuesta ganadora. 
+
+\paragraph{} Dado que la sociedad está cada vez más concienciada con el cuidado del medio ambiente, y que la investigación en fuentes de energía limpias da abundantes frutos, la evolución hacia estas fuentes de energía es imparable. En España hay una gran cantidad de puestos de trabajo en este sector, y a día de hoy hay instalados del orden de 30000 megavatios eólicos, con ambiciosos objetivos para los próximos años.
+
+\paragraph{} Sin embargo, la cantidad de energía eólica va ligada a ciertos factores sobre los que no tenemos control alguno: las condiciones atmosféricas. Dado que para cualquier empresa del mercado eólico es indispensable conocer la cantidad de megavatios de los que dispone, no es poca la investigación que se ha llevado a cabo en este campo.
+
+\paragraph{} El primer trabajo que citaremos es \textit{Multitask Support Vector Regression for Solar and Wind Energy Prediction}, de Carlos Ruiz, Carlos M. Alaíz y José R. Dorronsoro, que aborda el problema de predicción de energía eólica y solar mediante máquinas de vectores soporte de regresión multitarea, y que utiliza como parte de sus experimentos los mismos datos que se utilizan en este trabajo. De hecho, este trabajo es una de las referencias que hemos utilizado.
+
+\paragraph{} Otro trabajo en esta línea es \textit{Boosting algorithms in energy research: a systematic review}, de Hristos Tyralis y Georgia A Papacharalampous, en el que se utilizan modelos de ensemble boosting para realizar predicciones en energía eólica y fotovoltaica. En este trabajo se dan algunas nociones de cómo funcionan los métodos de ensemble boosting, aunque los experimentos se llevan a cabo con un modelo de ensemble stacking. Sin embargo, ambos trabajos comparten objetivos.
+
+\paragraph{} Un último trabajo sobre predicción eólica es \textit{Multi-task learning for the prediction of wind power ramp events with deep neural networks}, que utiliza redes neuronales multitarea para predecir la ocurrencia de rampas de viento, es decir, periodos en los que se produce un cambio brusco en la dirección o velocidad del viento. Las redes neuronales multitarea incluyen neuronas adicionales en la última capa para realizar predicciones auxiliares que se espera que tengan relación con la predicción principal, esperando que al entrenar la red para predecir también el valor de las neuronas auxiliares, se mejore la predicción principal. Este trabajo es de M. Dorado-Moreno, 
+N. Navarin, P. A. Gutiérrez, L. Prieto, A. Sperduti, S. Salcedo-Sanz y C. Hervás-Martínez.
+
+\paragraph{} Esperamos que, en mayor o menor grado, este trabajo también suponga un paso más en el camino de la predicción eólica.
+
+
+
+\section{Objetivos}
+
+\paragraph{} A lo largo de este trabajo pretendemos comprobar que error de predicción podemos conseguir prediciendo la energía obtenida en el Parque Eólico de Sotavento, en Galicia, utilizando como variables independientes las predicciones meteorológicas del Centro Europeo de Previsiones Meteorológicas a Plazo Medio. 
+
+\paragraph{} Se estudiará un modelo de regresión regularizada, un perceptrón multicapa, una máquina de vectores soporte de regresión, y finalmente se utilizarán estos para construir un modelo de ensemble de regresión. Estos tres modelos los entrenaremos individualmente para ver qué error podemos conseguir con cada uno por separado, y para calcular con qué parámetros funcionan mejor, y después se incorporarán también al modelo de ensemble para ver si se obtiene alguna mejoría.
+
+\section{Estructura del documento}
+
+\paragraph{} Hemos organizado este documento comenzando con una explicación de cada modelo, no en excesiva profundidad, ya que este TFG se centra en los resultados experimentales y en el análisis de los mismos, pero sí lo suficientemente detallada como para poder trabajar con los modelos con cierto criterio y dominio sobre cada uno. Además, cierto conocimiento sobre el modelo que se está utilizando es indispensable para poder configurar sus hiperparámetros adecuadamente, y para interpretar luego qué resultados estamos obteniendo, y qué variaciones podrían llevarnos a mejorarlos.
+
+\paragraph{} A continuación se hace una explicación bastante detallada de la naturaleza de los datos con los que tratamos, partiendo de la idea de que un conocimiento profundo del problema es una tarea de la que ningún modelo de predicción nos puede eximir. 
+\paragraph{} Tras la explicación de cada experimento, se hace un análisis de los resultados, para posteriormente, tras los resultados del modelo de ensemble, profundizar aún más en los puntos fuertes y débiles de cada uno de los modelos, y especialmente del modelo de ensemble.
+
+\paragraph{} La última parte corresponde a las conclusiones tras haber realizado todo el resto del trabajo, y con algunas indicaciones sobre el trabajo futuro que, tras haber hecho un análisis de las posibles causas de los errores de los modelos, creemos que pueden conducir a mejorar los resultados de este trabajo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Estado del arte}\label{chap2}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Modelos de regresión}\label{chap3}
+
+\section{El problema de regresión}
+La mayoría de esta sección ha sido obtenida a partir del capítulo 3 de \cite{WittenGarethHastieTibshirani}.
+
+\paragraph{} Como ya hemos dicho, nos encontramos frente a un problema de regresión: queremos encontrar la relación que hay entre unas variables aleatorias independientes, que son las predicciones meteorológicas que detallaremos a continuación; y una variable aleatoria dependiente, que es la cantidad de energía producida cada hora de cada día en el parque eólico experimental de Sotavento, en Galicia.
+
+\paragraph{} Nuestras variables aleatorias independientes serán la velocidad del viento a 10 y 100 metros de altura, la presión sobre la superficie, y la temperatura a 2 metros de altura. Dado que la velocidad del viento es un vector con dirección y módulo, la separaremos en el módulo de una componente u y el módulo de una componente v.
+
+\paragraph{} En esta sección comenzaremos explicando cómo podemos obtener una solución lineal, viendo en cierta profundidad la regresión multilineal y la regresión regularizada, para, a continuación, estudiar dos modelos más complejos y no lineales: el perceptrón multicapa y la máquina de vectores soporte de regresión.
+
+\subsubsection{Regresión lineal simple}
+
+\paragraph{} En un problema de regresión lineal simple queremos encontrar la expresión de una variable aleatoria, la variable de respuesta, en función de una variable independiente, de manera que la relación que hallemos entre ambas sea lineal. A la variable dependiente la llamaremos X, y a la variable independiente Y. Además, toda la información que obtengamos sobre la relación entre estas vendrá de una muestra de datos $D_n$, compuesta por $n$ observaciones:
+
+\begin{equation}
+    \text{D}_n = \{(X_1, Y_1), (X_2, Y_2), \ldots, (X_n, Y_n) \}
+    .
+\end{equation}
+%
+Llamaremos $\widetilde Y$ a nuestra predicción del valor de $Y$, y la escribimos en función de $X$ como
+%
+\begin{equation}
+    \text{\widetilde Y} = f(X) = \beta_0 + \beta_1X
+    ,
+\end{equation}
+%
+donde $\beta_0$ es el corte de la recta con el eje OY y $\beta_1$ es la pendiente de la recta, y $f(X)$ es el modelo lineal. A partir de la muestra, construiremos una función cuyos valores se acerquen lo máximo posible a los valores de la variable aleatoria $Y$, y esta cercanía la mediremos con el error cuadrático medio.
+
+\paragraph{} Hallaremos los valores de $\beta_0$ y $\beta_1$ minimizando el error cuadrático medio visto como función de $\beta_0$ y $\beta_1$, a partir de $D_n$:
+
+\begin{equation}
+    \text J(\beta_0, \beta_1)
+    = \frac1n \sum_{i=1}^n (Y_i - (\beta_0 + \beta_1 X_i))^2
+    .
+\end{equation}
+
+\paragraph{} Esta función tiene la forma de una parábola positiva, con lo cual, sabemos que siempre tendrá mínimo. Anulamos entonces las derivadas parciales y obtenemos los valores que hacen mínimo el error cuadrático:
+
+\begin{equation}
+    \text \beta_0
+    = E[Y] - E[X] \frac{ COV(X, Y) } { \sigma^2 (X) }
+\end{equation}
+
+\begin{equation}
+    \text \beta_1
+    = \frac{ E[XY] - E[X] \; E[Y] }{ E[X^2] - E[X]^2 }
+    = \frac{ COV(X, Y) }{ \sigma^2 (X) }
+    .
+\end{equation}
+
+
+
+
+
+
+
+
+\subsubsection{Regresión lineal múltiple}
+
+\paragraph{} La regresión lineal múltiple contempla el problema en el que hay que predecir el valor de una variable dependiente a partir de $p$ variables independientes. La regresión lineal múltiple o multilineal sigue la misma lógica que la regresión lineal simple que acabamos de ver, pero ya es lo suficientemente compleja como para obtener las primeras predicciones de nuestro problema.
+
+\paragraph{} El enfoque que utilizaremos para explicarla es adaptar el modelo de regresión simple para que en lugar de tener una función de una sola variable, tengamos una función vectorial
+
+\begin{equation}
+    \text{ \widetilde Y}
+    = \beta_0 + \boldsymbol \beta \boldsymbol X
+    = \beta_0 + \sum_{i=1}^p \beta_iX_i
+    .
+\end{equation}
+
+Donde $X_i$ representa la iésima variable, y $\beta_i$ cuantifica la asociación entre esa variable y la variable respuesta. La interpretación de $\beta_i$ es el efecto medio sobre Y de un incremento de una unidad sobre la variable $X_i$, manteniendo fijos los demás parámetros.
+
+\paragraph{} La manera de obtener los valores de $\beta_i$ es análoga a la regresión simple: simplemente hay que minimizar una función de $p$ variables:
+
+\begin{equation}
+    \text J(\beta_0, \beta_1, , \ldots, \beta_n)
+    = \sum_{i=1}^{n} (Y_i - \widetilde Y_i)^2
+    = \sum_{i=1}^{n} (Y_i - \beta_0 - \sum_{i=1}^p \beta_iX_i)^2
+    .
+\end{equation}
+
+\paragraph{} Sin embargo, para $p > 1$ las fórmulas no son tan compactas y fáciles de escribir como para $p=1$, y, dado que las podemos obtener mediante cualquier software de estadística, no las incluiremos aquí.
+
+\paragraph{} A partir de aquí, los modelos que estudiaremos tienen mayor complejidad: hay que calibrarlos con hiperparámetros, penalizan ciertas características no deseables en la función de regresión obtenida, etc. Para poder utilizarlos y sacarles mayor partido tenemos que estudiar antes dos técnicas muy conocidas: la estandarización de los datos y la validación cruzada. 
+
+
+\subsection{Preprocesamiento de datos: Estandarización}
+
+\paragraph{} En los datos eólicos del parque de Sotavento encontramos variables con unidades de medida distintas, por ejemplo velocidad del viento en metros por segundo y presión en pascales, por lo que las magnitudes son muy diferentes unas de otras. Para que un modelo no asuma que una está más relacionada con la cantidad de energía obtenida que otra, por el simple hecho de tener valores más grandes, realizamos la estandarización de los datos.
+
+\paragraph{} El proceso de estandarización de los datos es muy sencillo: simplemente tenemos que restar a cada variable independiente su media, y dividirla por su desviación típica. De esta manera, todas las variables tendrán media cero, y sus valores se alejarán de dicho valor una media de una unidad. Ahora todos los datos tienen magnitudes similares, pero no hemos perdido ninguna información: simplemente hemos hecho un cambio de escala.
+
+
+\subsection{Elección de hiperparámetros: validación cruzada}
+
+\paragraph{} Como ya hemos dicho, los modelos que vamos a estudiar tienen hiperparámetros, que influyen en gran medida en las predicciones que obtendremos. Para seleccionar qué valor deben tener los hiperparámetros de un modelo, utilizamos la validación cruzada.
+
+\paragraph{} Lo primero que hay que hacer es definir un conjunto finito de posible valores para los hiperparámetros que queremos calibrar, y definir un modelo con cada posible combinación. Obtenemos entonces una familia de modelos, y tenemos que ver cual de ellos predice mejor.
+
+\paragraph{} En el caso de validación cruzada con \textit{leave-one-out}, lo que vamos a hacer con cada uno de estos modelos es calcular el error cuadrático medio de predecir el \textit{target} de cada observación, con el detalle de que siempre entrenaremos el modelo con la parte restante del conjunto de datos. Entonces habremos asociado una cantidad de error a cada modelo, y podremos elegir el que menor error tenga.
+
+\paragraph{} El nombre de esta forma de particionar viene de que entrenamos el modelo con todo el conjunto de datos a excepción de una observación: aquella de la que queremos predecir el target.
+
+\paragraph{} Sin embargo, este proceso tiene un coste computacional muy alto, ya que hay que entrenar cada modelo tantas veces como predicciones queramos hacer. Por lo tanto, en la mayoría de las ocasiones utilizaremos una versión simplificada, conocida como \textit{k-fold cross validation}, que es una validación cruzada en que dividimos los datos en $k$ subconjuntos, y solo entrenamos el modelo $k$ veces. Uno de estos k subconjuntos se utiliza como conjunto de validación, y el resto para entrenar el modelo. Al ir rotando el conjunto de validación, obtenemos predicciones para todos los datos, y podemos dar el error cuadrático medio para cada modelo, y entonces elegir el mejor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Regresión regularizada} \label{section:RegresionRegularizada}
+Esta sección ha sido obtenida a partir de la sección 6.2.1 de \cite{WittenGarethHastieTibshirani}.
+
+\paragraph{} La regresión regularizada es un modelo de regresión muy similar al de regresión multilineal, en el que penalizamos los coeficientes de las variables independientes $\beta_1, \beta_2, \ldots, \beta_n$, basándonos en que los valores muy grandes de estos provocarán sobreajuste, y por tanto predicciones de peor calidad. Tenemos la siguiente ecuación:
+
+\begin{equation}
+    \text \widetilde J(\beta_0, \beta_1, \ldots, \beta_p)
+    = \sum_{i=1}^{n} (Y_i - \beta_0 - \sum_{i=1}^p \beta_iX_i)^2 + \lambda \sum_{j=1}^{p} \beta_{j}^{2}
+    = J(\beta_0, \beta_1, \ldots, \beta_p) + \lambda \sum_{j=1}^{p} \beta_{j}^{2}
+    ,
+\end{equation}
+%
+donde el hiper-parámetro $\lambda$ balancea la importancia relativa de minimizar el error cuadrático y de minimizar los coeficientes. Según el valor de lambda, minimizaremos una función u otra, con lo que las soluciones serán distintas. Esto quiere decir que el valor que demos a lambda tiene una gran importancia, y tendremos que calcularlo utilizando la validación cruzada.
+
+\paragraph{} Es importante notar que la penalización no se aplica sobre $\beta_0$, que es simplemente la media de la variable respuesta cuando todas las variables independientes tienen valor 0. No tendría sentido cambiar este valor.
+
+\paragraph{} Normalmente, en problemas que tengan una relación casi lineal entre las variables independientes y la variable respuesta, la regresión multilineal suele tener poco sesgo y varianza relativamente alta. Esto significa que un cambio pequeño en los datos puede provocar una gran diferencia en la estimación de los coeficientes. Cuanto mayor sea la cantidad de variables, $p$, con respecto a la cantidad de datos, $n$, mayor será esta diferencia. En estos casos la penalización que aplica la regresión regularizada es una gran ayuda para reducir esta varianza.
+
+\paragraph{} Por último, el coste computacional de la regresión regularizada es prácticamente el mismo que el de la regresión multilineal, así que es una técnica al alcance de la mano en casi cualquier problema en que quisiéramos utilizar la regresión multilineal.
+
+\paragraph{} Como veremos en los experimentos, la regresión regularizada es una solución que en relación a su simplicidad, es capaz de conseguir resultados tremendamente precisos.
+
+
+
+
+
+
+
+
+\section{Percetrón multicapa}
+La mayoría de esta sección ha sido obtenida a partir del capítulo 6 de \cite{HartDudaStork}.
+
+\paragraph{} En ésta sección veremos la red neuronal multicapa, también conocida como perceptrón multicapa. Este es el primer modelo de los vistos hasta ahora que nos permite resolver problemas no lineales. Sin embargo, también pueden resolver problemas lineales. A cambio de una complejidad mayor y un coste computacional más elevado que la regresión regularizada, nos permiten reducir en gran medida los errores de predicción.
+
+\paragraph{} Una red neuronal consiste en capas que son básicamente conjuntos de neuronas, y están conectadas unas con otras ponderadas con pesos. Veremos que los pesos son un factor muy determinante en el rendimiento de la red neuronal, y calcularlos son una de las principales dificultades en el uso de estos modelos.
+
+\paragraph{} La clave de estos modelos es que admiten unos algoritmos relativamente simples, en los que la función no lineal se puede aprender a partir del conjunto de datos. En este trabajo se utilizará uno de los más conocidos: la retropropagación. La retropropagación es un método potente y útil a la vez que relativamente simple, y además da pie a entender otros métodos más complicados como modificaciones de éste. Por todo esto es un método muy popular.
+
+\paragraph{} Vamos a ver que cada problema tiene una arquitectura o topología de red neuronal propia, y aquí es donde entra en juego el conocimiento que tengamos sobre el dominio del problema: incluso las ideas más informales o heurísticas pueden incorporarse fácilmente a nuestro modelo, modificando el número de capas ocultas y el número de neuronas de cada una de ellas. La simplicidad del método de retropropagación permiten probar distintas alternativas, sin que esto suponga un gran trabajo.
+
+\paragraph{} Una de las mayores dificultades a la hora de utilizar redes neuronales es ajustar su complejidad, es decir, seleccionar el modelo. Si la red tiene demasiadas capas ocultas con muchas neuronas, el modelo tendrá sobreajuste, mientras que si no tiene suficientes, generalizará demasiado, es decir, tendrá subajuste.
+
+\paragraph{} Como con cualquier modelo, las técnicas que veremos para redes neuronales no eximen de adquirir un conocimiento profundo del problema.
+
+
+
+
+
+
+
+\subsection{Estructura y alcance de las redes neuronales}
+
+\paragraph{} Las redes neuronales que vamos a estudiar tienen capa de entrada, capa oculta y capa de salida. Normalmente la cantidad de neuronas de la capa de entrada y de la de salida se obtiene directamente del problema, según la cantidad de atributos de cada dato y la cantidad de variables respuesta. La cantidad de neuronas de la capa oculta es en cambio algo que tiene que decidir el diseñador.
+
+\paragraph{} Las neuronas se conectan por pesos. El sesgo se incluye como una neurona más que se conecta a todas las demás excepto a las de la capa de entrada, que emite un valor constante y no tiene entradas.
+
+\paragraph{} La observación se introduce en la primera capa, recibiendo cada neurona el valor de un atributo de la observación. Las neuronas de esta capa transmiten el valor de su entrada a su salida sin modificarlo, es decir, su función es la función identidad.
+
+\paragraph{} En las redes neuronales que utilizaremos, la capa de salida tendrá una sola neurona. Tanto las neuronas de la capa de entrada como las de la capa de salida tendrán como función de activación la función identidad, mientras que las neuronas de la capa oculta tendrán la función ReLU:
+
+\begin{equation}
+    \text f(x)
+    = \max\{x, 0\}
+    =
+    \left\{ \begin{array}{lcc}
+    x &   \text{si \ }  x \geq 0 \\
+    \\0 &   \text{si \ } x < 0
+    \end{array}
+    \right.
+\end{equation}
+
+\paragraph{} Las entradas de las neuronas de la capa de entrada serán los atributos de cada observación, recibiendo la neurona $i$ el valor del atributo $i$. Las demás neuronas tendrán como entrada una combinación lineal de las salidas de las neuronas de la capa anterior y la neurona del sesgo. Llamaremos $x_i$ a la salida de las neuronas de la primera capa, $y_j$ a las de la capa oculta, y $z$ a la salida de la única neurona de la capa de salida:
+
+\begin{equation*}
+    \text \boldsymbol{x} = (x_1, \ldots, x_{n_1}),
+\end{equation*}
+\begin{equation*}
+    \text \boldsymbol{y} = (y_1, \ldots, y_{n_2}).
+\end{equation*}
+
+\paragraph{} Escribimos $z$ en función de $\boldsymbol{y}$ como
+
+\begin{equation}
+    \text z(\boldsymbol y) = f\bigg(\sum_0^n w_j y_j\bigg)
+    .
+\end{equation}
+%
+donde nos referimos a los pesos de entre la capa oculta y la capa de salida como $w_j$. Además, sabemos que la salida de cada neurona de la capa oculta es 
+
+\begin{equation}
+    \text y_j(\boldsymbol{x}) = f\bigg(\sum_0^n w_{ji} x_i\bigg)
+    ,
+\end{equation}
+%
+donde $w_{ji}$ es el peso que une la neurona $i$ de la capa de entrada con la neurona $j$ de la capa oculta. Sustituyendo obtenemos la salida de la red neuronal en función de la entrada:
+
+\begin{equation}
+    \text z(\boldsymbol{x}) = f\bigg(\sum_{j=1}^{n_2} w_j f\bigg(\sum_0^{n_1} w_{ji} x_i\bigg)\bigg)
+    .
+\end{equation}
+
+\subsubsection{¿Qué funciones puede representar una red neuronal?}
+
+\paragraph{} El teorema de Kolmogorov asegura que cualquier función continua puede expresarse en una red neuronal de 3 capas, si ponemos $2n+1$ neuronas ocultas, y poniendo una función en cada neurona que puede no ser la misma. En la última capa habría una única neurona que sumaría las salidas de todas las neuronas ocultas.
+
+\paragraph{} Otra prueba del alcance de las redes neuronales es el teorema de Fourier, que dice que cualquier función continua puede aproximarse arbitrariamente cerca por una suma de funciones armónicas, posiblemente infinita.
+
+\paragraph{} Esto sería una red neuronal con la función identidad en las neuronas de la capa de entrada, una cantidad posiblemente muy grande de neuronas en la capa oculta, con dichas funciones armónicas, y una sola neurona en la capa de salida, con una función que sume las salidas de las funciones de la capa oculta.
+
+\paragraph{} Sabemos que un conjunto completo de funciones, por ejemplo los polinomios, pueden representar cualquier función, sin embargo, esto también puede conseguirse utilizando una sola función, siempre que utilicemos los parámetros adecuados. Esto es lo que queremos conseguir con las redes neuronales multicapa, cuyas neuronas siempre tendrán la misma función de transferencia.
+
+\paragraph{} Ninguno de los teoremas anteriores nos da ninguna pista sobre la cantidad de neuronas ocultas ni sobre los pesos correctos. Además, aunque existiese, una prueba constructiva nos sería de poca ayuda, ya que normalmente no sabremos cómo es la función buscada. Sin embargo, estos resultados nos ayudan a pensar que el esfuerzo en esta búsqueda es razonable.
+
+
+
+\subsection{Algoritmo de retropropagación}
+
+\paragraph{} Las redes neuronales tienen dos modos de funcionamiento: \textit{feedforward} y aprendizaje. El feedforward consiste en introducir una observación en la capa de entrada para obtener un resultado por la capa de salida, mientras que aprendizaje (supervisado) consiste en introducir una observación en la capa de entrada pero conociendo el resultado correcto, y según sea el producido por la red, ajustar los pesos para que se parezcan lo máximo posible.
+
+\paragraph{} Sin embargo, aunque podríamos modificar a ojo los pesos de la capa oculta a la capa de salida para que la predicción se pareciese más al valor poblacional, no sabemos cómo modificar los pesos de la capa de entrada a la oculta, ya que no sabemos que salidas deberíamos estar obteniendo por las neuronas de esta capa. Éste es el problema de asignación de crédito (\textit{credit assignment problem}). El algoritmo de retropropagación es una de las soluciones más conocidas, y la mayoría de los métodos que se utilizan hoy en día parten de la retropropagación, con más o menos modificaciones. A continuación damos una explicación de cómo funciona.
+
+\subsubsection{Aprendizaje de la red}
+
+\paragraph{} Lo primero que tenemos que hacer para que nuestro método haga buenas predicciones, es cuantificar cómo de buena es una predicción. Queremos medir la distancia entre cada predicción y el resultado poblacional, y para esto utilizamos el error cuadrático. Si fijamos el valor de entrada, el error cuadrático se puede ver como una función de todos los pesos de la red. La llamamos $J(\textbf{w})$ (multiplicamos por $\frac{1}{2}$ para derivar más cómodamente):
+
+\begin{equation}[eq_Jw]
+    \text J(\textbf{w}) = \frac{1}{2} (t - z)^2
+    ,
+\end{equation}
+
+siendo $t$ es el valor poblacional (target) y $z$ el valor que ha predicho la red. \textbf{w} es el vector de todos los pesos de la red (weight). Buscamos el mínimo de esta función, es decir, la combinación de pesos que hay que seleccionar en la red para que las predicciones estén lo más cerca posible de los valores poblacionales.
+
+\paragraph{} El algoritmo de retropropagación consiste en intentar llegar a un mínimo local de $J(\textbf{w})$ haciendo pequeñas modificaciones de  $\textbf{w}$ en la dirección contraria a la del vector gradiente en ese punto, que es aquella en la que más rápido decrece $J(\textbf{w})$.
+
+\paragraph{} Las modificaciones serán proporcionales al error cuadrático, pues suponemos que si este es cercano a cero, ya estamos muy cerca del mínimo (que como mucho, será 0). Representamos el incremento de $\textbf{w}$ como
+
+\begin{equation}
+    \text \Delta \textbf{w} = - \eta \frac{\partial J}{\partial \textbf{w}}
+\end{equation}
+
+o, componente a componente:
+
+\begin{equation}
+    \text \Delta w_{mn} = - \eta \frac{\partial J}{\partial w_{mn}}
+    ,
+\end{equation}
+
+donde $\eta$ indica el tamaño del incremento.
+
+\paragraph{} Haciendo algunos cálculos, donde hemos llamado  $net$ a la entrada de la neurona de la capa de salida, y $net_j$ a la entrada de la neurona j de la capa oculta, obtenemos la expresión del incremento de $w_j$:
+
+
+\begin{equation}
+    \text \boxed{ 
+        \Delta w_{j} = \eta (t - z) f'(net) y_j 
+    }
+    \;.
+\end{equation}
+
+\paragraph{} De manera análoga, obtenemos la expresión del incremento de los pesos de la capa de entrada a la capa oculta:
+\begin{equation}
+    \text \boxed{
+        \Delta w_{ji} = \eta  (t - z) f'(net) w_{j}  f'(net_j) x_i
+    }
+    \; .
+\end{equation}
+
+\paragraph{} Aunque el desarrollo de la expresión del cálculo del incremento de los pesos parezca excesivamente técnico para el problema a tratar, ha sido muy útil conocerlo a la hora de entrenar el modelo, ya que hay que tenerlo en cuenta a la hora de inicializar pesos, hacer ajustes de los demás hiperparámetros del modelo en los casos en los que el coste temporal es demasiado alto, además de para entender el proceso de regularización de los pesos y la estandarización previa de los datos. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{\textit{Support Vector Regressor} (SVR)}\label{section:svr}
+La mayoría de esta sección ha sido obtenida de \cite{SmolaScholkopf} y del capítulo 19 de \cite{EfronHastie}.
+
+\paragraph{} Las máquinas de vectores soporte de regresión (siglas en inglés SVR) son otra solución al problema de regresión, que consiste en una función $f(\boldsymbol x)$ que, en las observaciones del conjunto de aprendizaje, tenga un error menor que un $\varepsilon$ definido, y que al mismo tiempo sea lo más plana posible. 
+\paragraph{} Si imaginamos la función poblacional, que es la que tratamos de aproximar con $f(\boldsymbol x)$, e imaginamos también un tubo alrededor de su gráfica, de manera que los puntos de este tubo estén a una distancia épsilon de los puntos de la función, entonces nuestra función $f(\boldsymbol x)$ estará dentro de este tubo. Esta es la primera de las condiciones que hemos pedido, es decir, que en las observaciones del conjunto de aprendizaje, el error sea menor que $\varepsilon$. La otra condición hace referencia a que la función sea lo más parecida a una recta posible. Esto significa que queremos que la función crezca o decrezca de la forma más constante posible, es decir, que su segunda variable sea cercana a cero, en valor absoluto.
+
+\paragraph{} Explicaremos primero el método que siguen las máquinas de vectores soporte para resolver un problema lineal, y luego introduciremos las modificaciones necesarias para resolver problemas no lineales. 
+
+\paragraph{} Si $f$ es lineal podemos escribirla como
+\begin{equation}
+    \text f(\boldsymbol x)
+    = \langle \boldsymbol w, \boldsymbol x \rangle + b
+    \;\;\;\; : \boldsymbol w \in \mathcal{X}, b \in \mathcal{R}
+    .
+\end{equation}
+%
+En este caso, donde, sea cual sea f, su segunda derivada será $0$, que sea plana lo entendemos como que $\|w\|$ sea cercano a $0$, es decir, que además de ser una recta, sea lo más cercana a una constante posible. Encontrar entonces la $f$ sería resolver el siguiente problema de optimización:
+\begin{equation}
+    \text \min \quad \frac{1}{2}\|w\|^2
+    \;\; : \;\;
+    \left\{
+        \begin{array}
+            {l}
+            y_i -\langle w, x_i \rangle -b \leq \varepsilon \\
+            \langle w, x_i\rangle+b-y_i \leq \varepsilon
+        \end{array}
+    \right.
+    ,
+\end{equation}
+%
+donde, de todas las funciones que cumplen las restricciones impuestas, nos quedamos con aquella cuyo vector de coeficientes, $w$, tenga menor norma. Como la función que buscamos es la solución a un problema de optimización convexa, sabemos que siempre habrá solución.
+
+\paragraph{} En ocasiones queremos permitir cierta cantidad de error, es decir, queremos permitir que nuestra función no esté contenida enteramente en el tubo épsilon. En este caso, tenemos que modificar el problema e incluir las llamadas \textit{slack variables}, $\xi_i, \xi_i^*$:
+
+\begin{equation}[eqn:optSVR]
+    \text \min \quad \frac{1}{2}\|w\|^{2} + C \sum_{i=1}^N (\xi_i + \xi_i^*)
+    \;\; : \;\;
+    \left\{
+        \begin{array}
+            {l}
+            y_i -\langle w, x_i \rangle -b \leq \varepsilon + \xi_i\\
+            \langle w, x_i\rangle+b-y_i \leq \varepsilon + \xi_i^*
+        \end{array}
+    \right.
+    .
+\end{equation}
+
+\paragraph{} La constante $C$, que es un hiperparámetro que tendremos que ajustar, balancea la importancia de que $f$ sea plana y la cantidad hasta la que toleramos desviaciones mayores que $\varepsilon$. El valor que demos a $C$ define en gran medida las predicciones que obtendrá nuestro modelo, por lo que es imprescindible que su valor sea adecuado. Para encontrarlo utilizaremos la validación cruzada, como definimos al principio del capítulo. Se explica más detalladamente en la sección de experimentos.
+
+\paragraph{} Otro detalle importante es que sólo las desviaciones mayores que $\varepsilon$ tienen coste. El segundo término de la ecuación no diferencia entre funciones que estén contenidas en el tubo épsilon, sino que únicamente tiene en cuenta la parte de la función que sale del tubo. El primer término, en cambio, será el que nos haga elegir una función u otra de entre las que tienen el mismo error: elegiremos aquella con menores coeficientes, es decir, aquella para la que la norma del vector de coeficientes, $w$, sea menor.
+
+\paragraph{} En la mayoría de los casos, resultará más sencillo, y es lo que haremos, resolver la \cref{eqn:optSVR} en su expresión dual. Sobre el problema dual únicamente veremos que será una función que construyamos a partir del problema que ya hemos definido, que se llama problema primal. A grandes rasgos, vamos a buscar un máximo en lugar de un mínimo, modificando las restricciones e introduciendo el conjunto dual de variables, que son los multiplicadores de Langrange $\alpha_i^{(*)}$ y $\eta_i^{(*)}$:
+
+
+\begin{align}\label{eqn:probDual}
+    \text L:=& \frac{1}{2}\|\boldsymbol w\|^{2}+C \sum_{i=1}^{n}(\xi_i+\xi_i^{})-\sum_{i=1}^{n}(\eta_i \xi_i+\eta_i^{} \xi_i^{*}) - \nonumber \\
+    &-\sum_{i=1}^{n} \alpha_i(\varepsilon+\xi_i-y_i+\langle \boldsymbol w, \boldsymbol{x_i}\rangle+b) - \nonumber \\
+    &-\sum_{i=1}^{n} \alpha_i^*(\varepsilon+\xi_i^* + y_i-\langle \boldsymbol w, \boldsymbol{x_i}\rangle-b)
+    .
+\end{align}
+
+
+\paragraph{} Ahora, derivando respecto de las variables primarias $\boldsymbol w$, $b$ y $\xi_i^{(*)}$, anulando y sustituyendo, obtenemos el problema de optimización dual
+
+
+\begin{spalign}
+    \label{eqn:optDual}
+    \text \max
+    \left\{
+        \begin{aligned}
+            -\frac 1 2 \sum_{i, j=1}^n(\alpha_i-\alpha_i^*)(\alpha_j-\alpha_j^*)\langle \boldsymbol{x_i}, \boldsymbol{x_j}\rangle \\
+            -\varepsilon \sum_{i=1}^n(\alpha_i+\alpha_i^*)+\sum_{i=1}^n y_i(\alpha_i-\alpha_i^*)
+        \end{aligned}
+    \right.
+    \;\; : \;\; \sum_{i=1}^n(\alpha_i-\alpha_i^*)=0 \quad \text{ y } \quad \alpha_i, \alpha_i^* \in[0, C]
+\end{spalign}
+
+\paragraph{} Y finalmente, con algunos cálculos más en las ecuaciones de las derivadas, podemos expresar $\boldsymbol w$ en función de los $\boldsymbol{x_i}$ por un coeficiente:
+
+\begin{equation}
+    \text \boldsymbol w = \sum_{i=1}^n(\alpha_i-\alpha_i^*)\boldsymbol{x_i}
+    ,
+\end{equation}
+%
+y por tanto
+\begin{equation}
+    \text f(\boldsymbol x)
+    = \sum_{i=1}^n(\alpha_i-\alpha_i^*) \langle x_i, \boldsymbol x \rangle + b
+    .
+\end{equation}
+
+\paragraph{} Vemos que $\boldsymbol w$ puede expresarse como una combinación lineal de las observaciones de nuestra muestra de datos. Además, el algoritmo consiste básicamente en hacer productos escalares entre observaciones, y en ningún momento tratamos con las observaciones individualmente, sino que solo nos interesa conocer el resultado de productos escalares entre observaciones. Este detalle es importante y más adelante lo utilizaremos para poder resolver problemas no lineales.
+
+\paragraph{} Ahora nos falta calcular b. En este epunto introducimos las condiciones de Karush-Kuhn-Tucker, a partir de las cuales acotaremos $b$, y concluiremos algunas observaciones más que revelan por qué las SVRs son tan potentes. Las condiciones de Karush-Kuhn-Tucker dicen que el vector de pesos $\boldsymbol w$ que sea solución de nuestro problema también será solución de las siguientes ecuaciones:
+\begin{equation}[eqn:KKK1]
+    \text \alpha_i(\varepsilon+\xi_i-y_i+\langle \boldsymbol w, \boldsymbol{x_i}\rangle+b)=0
+    ,
+\end{equation}
+\begin{equation}[eqn:KKK2]
+    \text \alpha_i^*(\varepsilon+\xi_i^*+y_i-\langle \boldsymbol w, \boldsymbol{x_i}\rangle-b)=0
+    ,
+\end{equation}
+\begin{equation}
+    \text (C-\alpha_i) \xi_i=0
+\end{equation}
+%
+y
+\begin{equation}
+    \text (C-\alpha_i^*) \xi_i^*=0
+    .
+\end{equation}
+
+\paragraph{} A partir de estas condiciones vemos que las observaciones que se salgan del tubo épsilon son las únicas para las que $\alpha_i - \alpha_i^*$ es no nulo, por lo tanto, en la expresión de $\boldsymbol w$, las únicas observaciones que no vamos a multiplicar por un coeficiente igual a cero son las que se salgan del tubo. Obviamente no nos hace falta conocer las observaciones que se vayan a multiplicar por cero, con lo que $\boldsymbol w$ solo depende las observaciones que salgan del tubo épsilon. A estas observaciones las llamamos vectores soporte, y nos permiten no tener en cuenta el conjunto completo de datos cada vez que queramos realizar una predicción, cosa que es tremendamente útil, y hace que podamos aplicar las SVRs en problemas con un conjunto de datos de gran tamaño.
+
+\paragraph{} Por otro lado, a partir de estas cuatro condiciones vemos que podemos acotar $b$ en el siguiente intervalo:
+
+\begin{align*}
+    \max \{-\varepsilon+y_i-\langle w, &x_i\rangle \mid \alpha_i<C \text { o } \alpha_i^*>0\} \leq \\
+    &\leq b \leq \\
+    \leq \min \{-\varepsilon+y_{i}-\langle w, &x_{i}\rangle \mid \alpha_{i}>0 \text { o } \alpha_{i}^{*}<C\}
+    ,
+\end{align*}
+%
+y en el caso de que algún $\alpha^{(*)}$ pertenezca al intervalo $(0, C)$, las desigualdades pasan a ser igualdades, con lo que tenemos el valor exacto de $b$.
+
+
+\paragraph{} Ya conocemos un procedimiento para encontrar $f(\boldsymbol x)$ en un caso lineal, y hemos visto además que solo depende de los vectores soporte. A continuación, vamos a ver como adaptar $f(\boldsymbol x)$ para problemas no lineales.
+
+
+
+
+
+\subsubsection{Kernel trick}
+
+\paragraph{} Habíamos hecho hincapié en que para escribir $f(x)$ no nos hacía falta conocer el valor de las observaciones individualmente, sino que solo nos interesaba conocer el producto escalar de unas observaciones con otras. Esto nos va a permitir que podamos aplicar una transformación no lineal a los datos para convertirlos en unos que sí se puedan aproximar con una función lineal.
+
+\paragraph{} Si tuviésemos que aplicar una transformación lineal a todos los datos del problema, el coste computacional sería demasiado alto para problemas con gran cantidad de datos, y no podríamos utilizar las SVRs. Sin embargo, mediante una clase de funciones llamadas funciones kernel, podemos solucionar este problema.
+
+\paragraph{} Supongamos que queremos aplicar una transformación no lineal $\phi$ a nuestros datos. Dado que solo necesitamos conocer $\langle \boldsymbol x_i, \boldsymbol x_j \rangle$, tras aplicar la transformación solo necesitamos saber $\langle \phi ( \boldsymbol x_i), \phi ( \boldsymbol x_j) \rangle$, y la ventaja de las funciones kernel es que para determinadas $\phi$, tenemos una función $K$ que cumple $K(\boldsymbol x_i, x_j) = \langle \phi ( \boldsymbol x_i), \phi ( \boldsymbol x_j) \rangle$. De esta manera podemos calcular los productos escalares sin conocer la imagen por $\phi$, y solo tenemos que calcular $K(\boldsymbol x_i, x_j)$.
+
+\paragraph{} Hay distintos ejemplos de funciones Kernel, pero la que nosotros vamos a utilizar es la función kernel de base radial, o, según sus siglas en inglés, kernel \textit{rbf}. Tiene la siguiente expresión:
+
+\begin{equation}[eqn:kernelRBF]
+    \text K(\boldsymbol x_i, \boldsymbol x_j) =  exp({-\frac{\|\boldsymbol x_i - \boldsymbol x_j\|^2}{2\sigma^2}})
+    ,
+\end{equation}
+
+\paragraph{} Se explicará su uso más detalladamente en la sección de experimentos de la SVR.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Métodos de ensemble}
+
+\section{¿Qué es un modelo de ensemble?}
+
+\paragraph{} Los métodos de ensemble de regresión son un tipo de modelo de regresión compuesto de varios modelos individuales, que se entrenan para resolver el mismo problema y son combinados para obtener mejores resultados.
+
+\paragraph{} Utilizaremos el término modelo individual para hacer referencia a un modelo tradicional que no está compuesto por otros modelos, en contraste con un modelo de ensemble, que sí estará compuesto por otros modelos; de hecho, por modelos individuales.
+
+\paragraph{} La solución ideal al problema de regresión sería un modelo que tuviese suficientes grados de libertad como para resolver la complejidad subyacente de los datos, pero no demasiados para que no sobreajuste.
+
+\paragraph{} El rendimiento de los modelos que sobreajustan suele variar mucho según la forma de los datos sobre los que se hagan predicciones, es decir, tienen varianza alta, y esto es algo no deseable.
+
+\paragraph{} Los modelos individuales pueden combinarse entre sí para formar modelos más complejos, que serán los modelos de ensemble. A menudo tenemos modelos individuales que no dan muy buenos resultados por tener mucho sesgo (no tienen suficientes grados de libertad), o que por el contrario tienen demasiada varianza (demasiados grados de libertada). Los métodos de ensemble construyen un método con menor sesgo o menor varianza que obtenga mejores resultados.
+
+
+\paragraph{} Un modelo de ensemble es un modelo que hace predicciones basadas en las predicciones de ciertos modelos individuales. El primer paso para construir un modelo de ensemble es seleccionar los modelos base que vamos a utilizar. La mayoría de las veces (bagging, boosting) utilizaremos un único modelo y variaremos los parámetros y/o el conjunto de aprendizaje. Entonces decimos que el método de ensemble es homogéneo. En los modelos de ensemble stacking en cambio se utilizan distintos modelos individuales, cosa que puede tener grandes beneficios. Entonces decimos que el modelo de ensemble es heterogéneo.
+
+\subsubsection{Bagging}
+
+\paragraph{} Para definir bagging antes es necesario definir el bootstrapping, que es un método de remuestreo en el que generamos muestras de tamaño $k$ a partir de un conjunto de datos de tamaño $n$, haciendo extracciones aleatorias con reemplazo. Este método tiene la ventaja de que, bajo las hipótesis de representatividad e independencia, podemos considerar que las extracciones se hacen directamente de la distribución subyacente.
+
+\paragraph{} La hipótesis de representatividad consiste en asumir que $n$ es lo suficientemente grande como para reflejar la complejidad de la distribución subyacente.
+
+\paragraph{} La hipótesis de independencia consiste en asumir que $n$ es lo suficientemente grande en comparación con $k$ como para poder asumir que las muestras no tendrán correlación. Podremos considerar las observaciones casi independientes idénticamente distribuidas.
+    
+
+    
+\paragraph{} Bagging es un método de ensemble que consiste en entrenar varios modelos individuales independientes y promediar sus predicciones para obtener un modelo con menos varianza. Al entrenarse los modelos individuales de manera independiente, tenemos la posibilidad de entrenarlos en paralelo, cosa que puede suponer un ahorro muy significativo de tiempo.
+
+\paragraph{} El procedimiento consiste en extraer una muestra bootstrap para cada modelo, que será su conjunto de aprendizaje. La predicción del modelo bagging se obtiene haciendo un promedio entre las predicciones de los modelos individuales.
+    
+\paragraph{} Hacer un promedio de las predicciones de los modelos individuales no cambia la respuesta esperada, pero reduce la varianza, de la misma manera que hacer la media de variables aleatorias i.i.d. preserva el valor esperado pero reduce la varianza.
+
+
+\paragraph{} Random forests es el ejemplo más conocido de modelo de ensemble bagging, donde se combinan árboles de decisión.
+
+\subsubsection{Boosting}
+
+\paragraph{} Boosting es un método de ensemble que consiste en entrenar varios modelos individuales secuencialmente, influyendo el entrenamiento de un modelo en el de los modelos posteriores. Conseguimos un modelo con menor sesgo, aunque en ocasiones el coste temporal es muy elevado.
+
+\paragraph{} Para que el coste temporal sea razonable, se suelen utilizar modelos individuales poco precisos que se entrenen rápidamente. Cada modelo se entrena dando más prioridad a las observaciones que han sido mal clasificadas previamente.
+
+\paragraph{} La predicción del modelo de ensemble bagging será una suma ponderada de las predicciones de los modelos individuales. Normalmente buscar una ponderación que dé buenos resultados no es inmediato.
+
+\paragraph{} \textit{Adaptative boosting} y \textit{gradient boosting} son dos maneras distintas de construir un modelo de ensemble bagging, que se diferencian en la manera de encontrar los coeficientes de la suma ponderada.
+
+
+\subsubsection{Stacking}
+
+\paragraph{} Stacking es un método de ensemble que consiste en entrenar varios modelos individuales que pueden ser heterogéneos. Este es el modelo que empleamos en los experimentos, así que le dedicaremos más tiempo en la siguiente parte de este trabajo.
+
+
+\section{Método de ensemble \textit{stacking}}
+La mayoría de esta sección ha sido obtenida a partir de \cite{Wolpert}.
+
+\paragraph{} En esta sección vamos a definir una técnica utilizada para construir métodos de ensemble conocida como \textit{stacking} o \textit{stacked generalization}.
+
+\paragraph{} Los modelos de ensemble dan una solución más elaborada que la de otros métodos al problema de elegir con qué modelos de regresión individuales haremos predicciones, de entre una familia de N modelos $\{G_j\}$, con $N \geq 1$.
+
+\paragraph{} En validación cruzada, por ejemplo, que es una solución muy popular a este problema, nos quedamos con un único modelo que consideramos el mejor, es decir, que ha obtenido la mejor puntuación según una métrica que hemos definido. Esto es una solución relativamente simple y de bajo coste, pero tiene la desventaja de que descartamos todos los modelos menos uno, desentendiéndonos de cualquier aportación que pudiesen hacer.
+
+\paragraph{} Al trabajar con modelos de ensemble, en cambio, involucramos a la familia completa de modelos de regresión individuales, $\{G_j\}$, obteniendo así un modelo más potente. La idea subyacente es que los fallos de cada modelo se compensen con los demás, ya que la porción de datos donde un modelo comete mayor fallo no tiene por qué ser la misma que para otro modelo. Con cierta elección cuidadosa de los modelos individuales que compondrán nuestro modelo de ensemble, esperamos que no lo sean.
+
+\paragraph{} A modo de adelanto para facilitar la comprensión del método stacking, damos la siguiente comparación entre el funcionamiento de un modelo individual y uno stacking: 
+
+\paragraph{} Un modelo individual tradicional se entrena sobre un conjunto de datos que vive en un espacio, digamos el espacio de nivel 0, y luego es capaz de predecir el target de nuevas observaciones que también vivan en el espacio de nivel 0.
+
+\paragraph{} Un modelo stacking que utilice un conjunto de N modelos de regresión individuales, hace una transformación de los datos del espacio de nivel 0 para conseguir datos en un espacio de nivel 1, transformación en la cual toma parte cierto subconjunto de los N modelos. A continuación, entrena un modelo sobre los datos de nivel 1, y éste es el que se utiliza para hacer predicciones. Como los datos sobre los que queremos hacer predicciones viven en el espacio de nivel 0, antes de predecir tendremos que llevar estos datos al nivel 1, aplicar el modelo, y finalmente tomar la predicción de nivel 1 que obtengamos y llevarla de vuelta al nivel 0.
+
+
+\paragraph{} Llamaremos espacio de nivel 0 a $\mathbb{R}^d \times \mathbb{R}$, que es donde viven los elementos de $D_n$, y espacio de nivel 1 a $\mathbb{R}^k \times \mathbb{R}$. Puede haber espacios de otros niveles, aunque para esta definición solo nos hacen falta estos dos.
+
+\paragraph{} Los elementos del espacio de nivel 1 también los escribimos con la forma habitual $(\boldsymbol{\widetilde{X}}_i, \widetilde{Y})$. Cada observación de este espacio se construye a partir k modelos de regresión individuales de nuestro conjunto $\{G_j\}$, fijando una partición $\theta_i$ y haciendo k predicciones $G_j(\theta_{itrain}, \pi_X(\theta_{ival}))$. Así obtenemos k valores, que serán la componente $\boldsymbol{\widetilde{X}}_i$ de nuestro elemento $(\boldsymbol{\widetilde{X}}_i, \widetilde{Y})$. 
+
+\paragraph{} La manera de obtener $\widetilde Y$ es mediante una transformación biyectiva $\phi(Y)$. En nuestro caso, utilizaremos la identidad, es decir, no modificaremos $Y$:
+
+\begin{align}
+    \begin{split}
+        \phi: \mathbb{R} &\to \mathbb{R}\\
+        Y_i &\mapsto Y_i
+    \end{split}
+    .
+\end{align}
+
+
+\paragraph{} Estos últimos párrafos se corresponden con la figura \ref{dibujoGeneralizador1}.
+
+\begin{figure}{dibujoGeneralizador1}{En esta imagen vemos como se genera una observación genérica $(\widetilde{\boldsymbol X}_i, \widetilde{Y}_i)$ del espacio de nivel 1, a partir de todo $D_{train}$ utilizando una partición $\theta_i$.}
+\image{\textwidth}{}{dibujoGeneralizador1}
+\end{figure}
+
+
+\paragraph{} Para $\theta_i$ fija, hemos obtenido un elemento del espacio de nivel 1, por lo que rotando $i$, en total obtendremos r elementos. Sobre este nuevo conjunto de entrenamiento, que podemos llamar conjunto de entrenamiento de nivel 1 o reducido, entrenaremos un último modelo de regresión individual $\widetilde{G} \in {G_j}$ de la manera habitual.
+
+\paragraph{} Llegados a este punto ya sabemos construir el modelo final $\widetilde{G}$ que se ha entrenado sobre el conjunto de entrenamiento de nivel 1, y que por tanto predice sobre el espacio de nivel 1 (figura \ref{dibujoGeneralizador1}). Solo falta definir cómo llevar una observación a dicho nivel para predecir su target, y cómo traer esta predicción de vuelta al nivel 1.
+
+
+\paragraph{} Digamos que $\boldsymbol X \in \mathbb{R}^d$ es una observación en el espacio de nivel 0 y $\widetilde{\boldsymbol X} \in \mathbb{R}^k$ su transformación al espacio de nivel 1. Entonces tenemos
+
+\begin{equation}
+    \text \widetilde{\boldsymbol X}
+    = (G_1(D_n; (\boldsymbol X, 0)),
+    G_2(D_n; (\boldsymbol X, 0)),
+    \ldots,
+    G_k(D_n; (\boldsymbol X, 0))) 
+    ,
+\end{equation}
+%
+es decir, siguiendo el mismo procedimiento que para obtener el conjunto de entrenamiento de nivel 1 o reducido, solo que esta vez entrenando los modelos $G_1, G_2, \ldots, G_k$ sobre toda la muestra $D_n$, en lugar de sobre un subconjunto de una de las particiones $\theta_i$. Sobre esta observación del espacio de nivel 1, $\widetilde{\boldsymbol X}$, ya podemos predecir con $\widetilde{G}$, para obtener $\widetilde{Y}$.
+
+\paragraph{} Solo queda llevar $\widetilde{Y}$ del espacio de nivel 1 al espacio de nivel 0. Esto lo hacemos mediante la inversa de la aplicación que llevaba targets del nivel 0 al nivel 1, es decir, con $\phi^{-1}$. Recordando como habíamos definido $\phi$, tenemos
+\begin{equation}
+    \text \phi^{-1}(\widetilde{Y}) = \widetilde{Y}
+    .
+\end{equation}
+
+
+\begin{figure}{dibujoGeneralizador2}{En esta imagen tenemos una visión general de un método de ensemble con stacking.}
+\image{\textwidth}{}{dibujoGeneralizador2}
+\end{figure}
+
+
+\begin{figure}{dibujoPrediccionGeneralizador}{Esquema de una predicción utilizando un modelo de ensemble ya entrenado.}
+\image{\textwidth}{}{dibujoPrediccionGeneralizador}
+\end{figure}
+
+\paragraph{} Este es el proceso completo, que puede iterarse para obtener p niveles, con $p \geq 1$.
+
+\paragraph{} A día de hoy no hay reglas generales que indiquen qué generalizadores utilizar para cada nivel, ni con qué proceso obtener los k números a partir del conjunto de aprendizaje del nivel $i$ que formen las componentes de entrada del nivel $i+1$, etc. La manera de proceder habitualmente es aplicar conocimiento específico del problema para seleccionar estos hiperparámetros.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Simulaciones y resultados}\label{chap4}
+
+\paragraph{} En este capítulo explicamos cómo hemos utilizado cada uno de los modelos vistos hasta ahora para predecir la cantidad de energía eólica obtenida en el Parque Eólico Experimental de Sotavento. 
+
+\subsubsection{Datos utilizados}
+La información sobre los datos ha sido obtenida de \cite{dorronsoro}.
+
+\paragraph{} Para realizar este trabajo contábamos con una cuenta en el Centro de Computación Científica de la Universidad Autónoma de Madrid, a partir de la cual teníamos acceso a 6 ficheros de datos en formato csv, en los que se encontraban las predicciones atmosféricas del Centro Europeo de Previsiones Meteorológicas a Plazo Medio y las medidas de la energía obtenida en el Parque Eólico de Sotavento de cada hora de cada día de los años 2016, 2017 y 2018.
+
+\paragraph{} Los datos de las predicciones atmosféricas consisten en una serie de medidas de la dirección del viento, la velocidad, presión y temperatura, que enseguida concretaremos; tomadas en distintos puntos de Galicia. Estos puntos constituyen una rejilla que está aproximadamente centrada en el parque de Sotavento, y que tiene 435 puntos. 
+
+
+\paragraph{} A partir de la intuición de que la cantidad de energía que iba a obtener el parque de Sotavento dependía sobretodo de las condiciones meteorológicas en sus alrededores más próximos, y que no era necesario por lo tanto tener en cuenta estas previsiones en un territorio tan amplio como del que disponíamos en principio, optamos por recortar los datos. Nos quedaremos únicamente con los puntos que rodean al parque de Sotavento, que está situado en las coordenadas (43.354377º, -7.881213º). 
+
+\paragraph{} La coordenada más cercana, dado que la resolución de la rejilla es de 0,125º, es (43.375º -7.875º), y los puntos que estudiaremos, por tanto, son (43.5, -8.), (43.5, -7.875), (43.5, -7.75 ), (43.375, -8.), (43.375, -7.875), (43.375, -7.75 ), (43.25, -8.), (43.25, -7.875), (43.25, -7.75 ).
+
+\paragraph{} Las medidas de las que disponemos son:
+\begin{enumerate}
+    \item Componente este de la dirección del viento medida a 10 metros de altura en m/s.
+    \item Componente este de la dirección del viento medida a 10 metros de altura en m/s.
+    \item Módulo de la velocidad del viento medida a 10 metros de altura en m/s.
+    \item Componente este de la dirección del viento medida a 100 metros de altura en m/s.
+    \item Componente este de la dirección del viento medida a 100 metros de altura en m/s.
+    \item Módulo de la velocidad del viento medida a 100 metros de altura en m/s.
+    \item Presión en la superficie en pascales.
+    \item Temperatura medida a 2 metros de altura en kelvin.
+\end{enumerate}
+
+\paragraph{} Dado que vamos a realizar una estandarización de los datos, no es necesario prestar mucha atención a las unidades.
+
+\paragraph{} En total tenemos 8 medidas tomadas en cada uno de los 9 puntos de la rejilla, es decir, 72 variables. Como la energía obtenida en el parque de Sotavento se mide cada hora, y tenemos los datos de tres años (2016 fue bisiesto), en total tenemos $24 \times 365 \times 3 + 24 = 26304$ observaciones.
+
+\paragraph{} En la figura \ref{Y_test_boxplot} vemos un diagrama de caja de la energía obtenida en el año 2018, es decir, lo que estamos viendo es nuestro conjunto de test. Vemos que el bigote inferior es tremendamente corto. Esto se debe a que hay una alta cantidad de periodos en los que la producción de energía fue nula, debido a que los molinos no estaban funcionando. Desconocemos el motivo por el que esto es así, pero desde luego no podemos utilizar los datos eólicos para intentar predecir cuándo estarán apagados los modelos, con lo cual, esta es una desventaja que tenemos que asumir desde el principio.
+
+\paragraph{} Continuando con el diagrama de cajas \ref{Y_test_boxplot}, vemos que la mediana es muy baja, debido en gran parte al peso de las veces que los molinos no han estado funcionando.
+
+\paragraph{} Por último, vemos una gran densidad de valores atípicos elevados. En general la idea que podemos ir sacando en claro de este diagrama es que los datos son bastante cambiantes.
+
+\paragraph{} Las gráficas \ref{Y_test_2018-12-01} y \ref{Y_test_2018-12-30} son dos ejemplos de días en los que hay producción nula de energía. En el gráfico del día 1 de diciembre de 2018 encontramos un ascenso de 8000 vatios en un periodo de unas 10 horas, mientras que en el segundo gráfico, vemos un ascenso de 6000 vatios en apenas 3 horas.
+
+\begin{figure}{Y_test_boxplot}{Boxplot de los valores de energía obtenida en el año 2018. Este es nuestro conjunto de test.}
+\image{15cm}{}{Y_test_boxplot}
+\end{figure}
+
+\begin{figure}{Y_test_2018-12-01}{Gráfica de los valores de energía obtenida el 1 de diciembre de 2018.}
+\image{15cm}{}{Y_test_2018-12-01}
+\end{figure}
+
+\begin{figure}{Y_test_2018-12-30}{Gráfica de los valores de energía obtenida el 30 de diciembre de 2018.}
+\image{15cm}{}{Y_test_2018-12-30}
+\end{figure}
+
+
+\subsubsection{Lectura de los datos}
+
+\paragraph{} Para leer los datos, que están en formato csv (valores separados por comas), hemos utilizado la librería pandas, que nos permite trabajar con objetos \textit{dataframe}. Los dataframe tienen una funcionalidad muy completa y nos ha facilitado enormemente el análisis de datos.
+
+\paragraph{} Con la función \textit{read\textunderscore csv} de pandas, pasando como parámetro el nombre del archivo, creamos un dataframe con tantas columnas como datos. A partir de aquí es fácil realizar un filtrado en el que mantengamos únicamente los atributos cuyas coordenadas pertenezcan al intervalo que hemos recortado. Llegados a este punto tenemos los datos que vamos a utilizar, y hay que separarlos en un subconjunto que utilizaremos como datos de entrenamiento y otro subconjunto que utilizaremos como datos de test.
+
+
+\subsubsection{Conjunto de entrenamiento y conjunto de test}
+
+\paragraph{} Una vez terminado el modelo de ensemble que construimos a lo largo de este trabajo, se entrenará con todos los datos de los que disponemos, es decir, las predicciones atmosféricas y la correspondiente cantidad de energía eólica obtenida de los años 2016, 2017 y 2018, y se empleará para predecir la cantidad de energía que se obtendrá en el futuro. De esta manera, utilizaremos el modelo entrenándolo con datos que son anteriores a las observaciones para las que queremos hacer predicciones.
+
+\paragraph{} Intuimos que este detalle puede ser importante: queremos entrenar un modelo y probarlo en condiciones lo más parecidas posible a aquellas en las que se utilizará. La manera de incorporar esta información a nuestro modelo es utilizar como conjunto de entrenamiento los años 2016 y 2017, y utilizar como conjunto de test los datos del año 2018, de manera que las observaciones sobre las que hagamos predicciones sean posteriores a aquellas sobre las que entrenamos el modelo.
+
+\paragraph{} Separamos entonces en los siguientes subconjuntos:
+\begin{itemize}
+    \item X\textunderscore train: predicciones meteorológicas de 2016 y 2017.
+    \item Y\textunderscore train: energía obtenida en 2016 y 2017.
+    \item X\textunderscore test: predicciones meteorológicas de 2018.
+    \item Y\textunderscore test: energía obtenida en 2018.
+\end{itemize}
+
+
+
+
+
+
+\section{Regresión regularizada}
+
+\paragraph{} Para el modelo de regresión regularizada hemos utilizado la función \textit{Ridge} del módulo \textit{linnear\textunderscore model} de la librería \textit{scikit learn} (sklearn). Respecto a los parámetros, hemos utilizado como \textit{solver} el mínimo error cuadrático medio, es decir, "lsqr" (del inglés \textit{lowest squares}), ya que es lo que corresponde al modelo que hemos estudiado. Además, suele ser más rápido que las alternativas. Los demás parámetros se han dejado con los valores por defecto, a excepción del parámetro \textit{alpha}.
+
+\paragraph{} El parámetro alpha corresponde al peso de la regularización, es decir, al parámetro \textit{lambda} en nuestra explicación del modelo en la sección \ref{section:RegresionRegularizada}. Para seleccionar su valor hemos utilizado la validación cruzada, mediante la función \textit{GridSearchcv} del módulo \textit{model\textunderscore selection} de la librería sklearn. Los parámetros que hemos utilizado son el modelo ridge que acabamos de describir en el parámetro \textit{estimator}, y como rango de valores hemos utilizado potencias de 10 desde 0 hasta 6. 
+
+\paragraph{} Al escoger el rango de valores hay que intentar coger un rango no excesivamente amplio, especialmente si el modelo tarda en entrenarse (aunque por ahora, este no es el caso), pero lo suficientemente grande para observar en qué parte del rango están los parámetros que mejor funcionan. Si, por ejemplo, escogemos un rango desde 10 hasta 10000, y el modelo va obteniendo mejores resultados a medida que el valor del parámetro aumenta, y además el mejor resultado se obtiene en el valor 10000, es decir, en el borde del intervalo, es obvio que hay una tendencia a obtener mejores resultados al aumentar el parámetro. En esta situación tenemos que aumentar el intervalo, o al menos moverlo, para incluir valores que hay a la derecha del tope, pues es muy probable que el modelo siga mejorando. Nos detenemos cuando haya signos claros de que el modelo deja de mejorar.
+
+\paragraph{} En nuestro caso, el modelo obtiene resultados prácticamente iguales desde el $10^0$ hasta el $10^3$, y luego comienzan a mejorar rápidamente en $10^4$ y $10^5$, para luego obtener el peor resultado de todos en $10^6$. Si hubiésemos utilizado un rango de parámetros hasta $10^4$, el mejor resultado hubiese estado en el borde del intervalo, hubiésemos renunciado a obtener mejores resultados con $10^5$, e incluso si el intervalo llegase solo hasta $10^5$, no tendríamos la certeza de que estamos en el mejor valor, ya que no habríamos comprobado que a partir de ese valor los resultados son peores.
+
+    
+
+\begin{table}[Tabla de ejemplo]{ridgeCV}{Resultados de la validación cruzada para el modelo Ridge sobre el parámetro alpha.}
+    \begin{tabular}{cccccccc}
+        \hline
+        $\boldsymbol \alpha$ & $10^0$ & $10^1$ & $10^2$ & $10^3$ & $10^4$ & $10^5$ & $10^6$ \\
+        \hline \hline
+        \textbf{ranking}  & 6 & 5 & 4 & 3 & 2 & 1 & 7 \\
+        \textbf{pts. test} & -2801,20 & -2801,20 & -2801,18 & -2800,95 & -2798,76 & -2781,95 & -2822,19 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\paragraph{} Además, hemos utilizado como scoring la estrategia \textit{neg\textunderscore mean\textunderscore absolute\textunderscore error}. Esto significa que el ranking y las puntuaciones de los modelos corresponden al error absoluto medio que tiene el método ridge con cada uno de los parámetros del rango que hemos proporcionado. En la tabla \ref{ridgeCV}, la tercera fila corresponde a la puntuación media de cada modelo, midiendo el error absoluto en negativo. La razón por la que medimos en negativo es porque la función GridSearchCV siempre maximiza, y como nosotros queremos seleccionar el parámetro para el que el modelo tenga error mínimo, escribimos los errores en negativo (los errores siempre serán una cantidad mayor o igual que cero) y escogemos el mayor.
+
+\paragraph{} Un detalle importante es que la validación cruzada se realiza siempre sobre el conjunto de entrenamiento. Esto es para que luego al predecir sobre el conjunto de test los resultados se parezcan a lo que podemos esperar al predecir sobre datos no conocidos. Si incluyésemos el conjunto de test en la validación cruzada, luego no podríamos utilizarlo para evaluar el comportamiento del modelo con datos nuevos, pues el modelo se habría entrenado también sobre el conjunto de test.
+
+\paragraph{} En la tabla \ref{ridgeCV} vemos que el parámetro que menor error absoluto tiene sobre el conjunto de entrenamiento es $\alpha = 10^5$. Entrenamos entonces un modelo ridge con ese parámetro alpha, y lo entrenamos con el conjunto de entrenamiento mediante la función \textit{fit}, a la que se le pasan como parámetros las observaciones del conjunto de entrenamiento y sus targets. A continuación, predecimos con él los targets de las observaciones del conjunto de test, y ya podemos medir los errores frente a los targets que tenemos en el conjunto de test.
+
+\paragraph{} El error absoluto medio que se ha obtenido prediciendo sobre el conjunto de test, es decir, las predicciones atmosféricas de 2018, es de 0,0866, es decir, $8,66\%$. Este porcentaje lo medimos respecto a la potencia máxima que puede obtener el parque en una hora, que son 17560 vatios. El error medio en valor absoluto es entonces entorno a los 1500 vatios.
+
+\paragraph{} Obtenemos además un valor para el estadístico $R^2$ de $46,8\%$. Esto quiere decir que la varianza de las predicciones atmosféricas explican un $46,8\%$ de la varianza de la energía obtenida.
+
+\paragraph{} Obtenemos la distribución de error que vemos en la gráfica \ref{ridge_error_boxplot}. La información que se muestra es la diferencia \textit{valor real} - \textit{valor predicción}. Podemos observar que la mediana está por debajo de cero, y que hay valores atípicos negativos de cerca de 17560 vatios (corresponden al -1, que es un -100\% de error). Estos son debidos probablemente a los periodos de tiempo de producción nula, que el modelo no ha conseguido aprender. Sin embargo, la caja que corresponde al rango intercuartílico es muy achatada, lo que nos indica que hay una gran cantidad de datos para los que se obtiene un error de $\pm 5\%$. Dada la simplicidad del modelo  y la complejidad de los datos, consideramos que estos son buenos resultados.
+
+
+\begin{figure}{ridge_error_boxplot}{Boxplot de los errores medidos como valores reales menos valores predichos del modelo ridge.}
+\image{\textwidth}{}{ridge_error_boxplot}
+\end{figure}
+
+\paragraph{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Perceptrón multicapa}
+
+\paragraph{} Para el perceptrón multicapa hemos utilizado la función \textit{MLPRegressor} del módulo \textit{neural\textunderscore network} de sklearn. En el parámetro activation, hemos seleccionado funciones de activación ReLU para las neuronas de las capas ocultas. Los pesos se inicializan aleatoriamente. Inicialmente pretendíamos utilizar una red neuronal de una capa oculta, pero tras numerosas pruebas hemos determinado que los resultados con tres capas ocultas eran mejores. Por tanto indicamos tres capas ocultas de 100 neuronas cada una en el parámetro \textit{hidden\textunderscore layer\textunderscore sizes}, indicamos 100, 100, 100. Los demás parámetros los dejamos con la configuración por defecto, a excepción del parámetro de regularización alpha, para el que realizamos una validación cruzada con GridSearchCV.
+
+\paragraph{} En la figura \ref{mlpCV} vemos los resultados de la validación cruzada. El rango es lógico, pues es lo suficientemente grande como para permitir variedad de resultados, y tenemos evidencia para considerar que el valor $10^4$ es un mínimo local, ya que si damos al parámetro alpha un valor mayor o menor, los resultados empeoran según nos alejamos.
+
+\begin{table}[Tabla de ejemplo]{mlpCV}{Resultados de la validación cruzada para el perceptrón multicapa sobre el parámetro alpha.}
+    \begin{tabular}{ccccccc}
+        \hline
+        $\boldsymbol \alpha$ & $10^1$ & $10^2$ & $10^3$ & $10^4$ & $10^5$ & $10^6$ \\
+        \hline \hline
+        \textbf{ranking}  & 5 & 4 & 3 & 1 & 2 & 6 \\
+        \textbf{pts. test} & -1048,44 & -1044,96 & -1044,92 & -1033,40 & -1043,27 & -1049,27 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\paragraph{} Para este modelo hemos obtenido un error absoluto medio de $6,5\%$, es decir, hemos mejorado considerablemente las predicciones que obteníamos con el modelo ridge, con el que fallábamos en un $8,66\%$. Este $6,5\%$ equivale a unos 1150 vatios, frente a los 1500 del modelo ridge.
+
+\paragraph{} El estadístico $R^2$ en este caso tiene un valor de $71,31\%$, que, frente al $46,8\%$ del modelo ridge, supone una mejora de caso el $25\%$.
+
+\paragraph{} En la figura \ref{mlp_error_boxplot} vemos el diagrama de caja con los errores de predicción del perceptrón multicapa sobre las predicciones meteorlógicas de 2018. Podemos apreciar que el rango intercuartílico vuelve a ser muy pequeño, y que la mediana parece ser también muy cercana a cero. Los valores atípicos vuelven a ser más extremos cuando el valor predicho supera al valor real, debido a los preriodos de producción nula. Podemos apreciar también una disminución de la longitud de los bigotes: buena señal ya que indica más cantidad de errores cercanos a cero.
+
+\begin{figure}{mlp_error_boxplot}{Errores del perceptrón multicala medidos como valores predecidos menos valores reales del perceptrón multicapa.}
+\image{15cm}{}{mlp_error_boxplot}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{SVR}
+
+\paragraph{} Para el modelo de la máquina de vectores soporte de regresión, svr, hemos utilizado la función \textit{SVR} del módulo \textit{svm} de la librería sklearn. Hemos utilizado la validación cruzada para los parámetros \textit{epsilon}, \textit{C} y \textit{gamma}, que explicaremos a continuación. Hemos utilizado el kernel \textit{rbf}, es decir, función de base radial (\textit{radial basis function}), sin máximo de iteraciones y con tolerancia $10^{-3}$. Los demás parámetros se han dejado con los valores por defecto.
+
+\paragraph{} El parámetro $C$ hace referencia a la regularización. Cuanto menor sea su valor, más impacto tendrá la regularización. El parámetro gamma corresponde al parámetro sigma de la función de base radial que utilizamos como kernel, según está escrita en la ecuación \ref{eqn:kernelRBF}. Por último, el parámetro épsilon hace referencia al tamaño del tubo épsilon que describimos en la sección de SVRs \ref{section:svr}.
+
+\paragraph{} Para la validación cruzada hemos configurado GridSearchCV según se hace en el artículo \cite{dorronsoro}, adaptando los intervalos de cada parámetro poco a poco para que el tiempo de ejecución sea menor. \textbf{Terminar de comentar esto.}
+
+\paragraph{} En este modelo hemos obtenido un error absoluto medio del 6,36\%, y un estadístico $R^2$ del 72,7\%. Son resultados mejores que los que obtuvimos para el perceptrón multicapa, que era nuestro mejor modelo hasta ahora, aunque la mejora es menos significativa que del modelo ridge al perceptrón. 
+
+\begin{figure}{svr_error_boxplot}{Errores del modelo svr medidos como valores predecidos menos valores reales del perceptrón multicapa.}
+\image{15cm}{}{svr_error_boxplot}
+\end{figure}
+
+\paragraph{} En la figura \ref{svr_error_boxplot} vemos un diagrama de caja de los errores del modelo svr prediciendo sobre las predicciones eólicas de 2018. El gráfico es, a simple vista, idéntico al del perceptrón multicapa, lo que nos hace pensar que no solo obtienen una media de error muy parecida, sino que también cometen los mismos errores. A continuación profundizaremos sobre esta idea, y compararemos las predicciones de unos modelos y otros en distintos escenarios, como parte del análisis del modelo de ensemble.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Stacking}
+
+\paragraph{} Para el modelo stacking hemos utilizado la función \textit{stackingRegressor} del módulo \textit{ensemble} de la librería sklearn. Los modelos que utilizaremos como modelos de regresión de nivel 0 son los vistos hasta ahora: el modelo ridge, el perceptrón multicapa y la svr. Estos modelos se introducen en el parámetro \textit{estimators}. Para cada uno de estos utilizaremos los parámetros que calculamos haciendo la validación cruzada de cada uno, y de modelo de regresión de nivel 1, que corresponde al parámetro \textit{final_estimator}, utilizamos una regresión lineal.
+ 
+\paragraph{} Para el modelo de regresión de nivel 1, hemos probado un modelo ridge, un perceptrón multicapa y una regresión lineal, y los mejores resultados se obtuvieron para el modelo lineal, aunque fueron prácticamente iguales. Por esto, y dado que el modelo lineal es el más simple y rápido, es por lo que lo hemos elegido.
+
+\paragraph{} Para el modelo de nivel 1 de regresión lineal, el modelo stacking nos da un error de 6,51\%, es decir, que no consigue mejorar la predicción de sus mejores modelos: el perceptrón multicapa y el modelo svr.
+
+\paragraph{} Para el modelo de nivel 1 ridge obtuvimos un error absoluto medio del 6,52\%, y utilizando un perceptrón multicapa de una capa oculta, un error absoluto medio del 6,53\%.
+
+\paragraph{} Estudiando la distribución del error absoluto de cada modelo individual, vemos que el día de mayor error de los tres modelos es el mismo: el 4 de abril de 2018, cuyas producciones de energía vemos en la gráfica \ref{hardest_day_to_predict_2018-04-04}. Es fácil ver cuál es el problema aquí: es un día con una producción relativamente alta (alrededor de un 70\% de la producción máxima) que súbitamente se interrumpe y hay varias horas de producción nula, para luego volver a producir a una tasa bastante cercana a la inicial.
+ 
+\begin{figure}{Y_test_2018-04-04}{Producción de energía el día 4 de abril de 2018, el día en que mayor error cometen los 3 modelos: ridge, perceptrón multicapa y svr; y por lo tanto también el modelo de enseble.}
+\image{15cm}{}{Y_test_2018-04-04}
+\end{figure} 
+
+\paragraph{} Vamos a ver qué producción de energía predice cada modelo este día: en la gráfica \ref{prediction_all_models_2018-04-04} vemos que ninguno de los cuatro modelos es capaz de predecir la producción nula. En la gráfica no podemos ver la gráfica del modelo svr, porque está justo debajo de la gráfica del modelo stacking.
+
+\begin{figure}{prediction_all_models_2018-04-04}{Predicción de energía de cada modelo el día 4 de abril de 2018 y producción real.}
+\image{15cm}{}{prediction_all_models_2018-04-04}
+\end{figure} 
+
+\begin{figure}{absolute_error_all_models_2018-04-04}{Errores de predicción de todos los modelos en valor absoluto para el día 4 de abril de 2018.}
+\image{15cm}{}{absolute_error_all_models_2018-04-04}
+\end{figure} 
+
+\paragraph{} En la figura \ref{absolute_error_all_models_2018-04-04} vemos los errores de todos los modelos en valor absoluto el día 4 de abril de 2018. Al igual que en la gráfica \ref{prediction_all_models_2018-04-04}, las gráficas del modelo svr y del modelo stacking coinciden, y solo podemos ver la de stacking, que es la que está pintada encima. 
+
+\paragraph{} La gráfica del error del modelo stacking, es claramente la que menor error tiene, a excepción del periodo en que la producción es nula, donde el modelo ridge tiene menor error. Sin embargo, vemos en el resto del gráfico que esto se debe simplemente a que ese día estaba subestimando las predicciones. Esto nos hace pensar que el modelo stacking no considera apenas las predicciones del modelo ridge debido a que la gran mayoría del tiempo tienen mayor error que las de el modelo svr y las del modelo mlp, y como además no es capaz de anticipar los periodos de producción nula, no aprovecha la ventaja de que el modelo ridge subestime.
+
+\chapter{Conclusiones y trabajo futuro}
+
+\paragraph{} Nos encontramos ante unos datos en los que es muy difícil mejorar un error del 6,5\% entrenando sobre 2016 y 2017 y prediciendo sobre 2018, y esto es debido a periodos de producción nula que nuestros modelos no han sido capaces de predecir. La conclusión obvia es que los periodos de predicción nula no dependen en absoluto de las predicciones meteorológicas, sino que deben de tener una causa completamente ajena que por lo tanto para nosotros resulta completamente aleatoria.
+
+\paragraph{} Respecto al comportamiento de nuestros modelos en periodos en los que no hay producción nula, el perceptrón multicapa y la svr superan al modelo ridge, con lo que el modelo de ensemble no da ningún peso a las predicciones del modelo ridge. 
+
+\paragraph{} Vemos además una clara preferencia del modelo de ensemble por las predicciones de la svr frente a las del perceptrón multicapa, y esto parece deberse a que en general, y aunque no por una gran diferencia, las predicciones de la svr superan a las del perceptrón, como vemos en todos los gráficos del capítulo anterior. De esta manera, el modelo de ensemble no supone una mejora respecto a la svr. 
+
+\paragraph{} Sería interesante encontrar modelos donde las secciones en que uno supere al otro sean algo mayores, para que así tenga más sentido una combinación entre las predicciones de ambos, en lugar de tener dos modelos donde haya una clara superioridad de uno respecto a otro, como nos hemos encontrado a lo largo de nuestros experimentos.
+
+\paragraph{} También sería de gran utilidad aumentar el espacio de datos para incluir alguna variable que indique cuándo la producción de energía será nula. Si se consiguiese solucionar este hándicap es muy probable que la mejora fuese altamente significativa, ya que no son pocas las veces en que la cantidad de energía obtenida ha sido nula.
+
+
+ 
+\end{document}
+
